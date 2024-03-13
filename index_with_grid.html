@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON Editor</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-200 p-8">
+
+    <div class="max-w-md mx-auto bg-white p-6 rounded-md shadow-md">
+
+        <h1 class="text-2xl font-bold mb-4">JSON Editor</h1>
+
+        <form id="jsonForm">
+
+            <!-- Render each field and value in the same row -->
+            <div id="jsonFields" class="grid grid-cols-2 gap-4"></div>
+
+            <button id="saveButton" class="bg-blue-500 text-white p-2 rounded-md mt-4">Save</button>
+        </form>
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Sample JSON data
+            var jsonData = {
+                "name": "John Doe",
+                "age": 30,
+                "city": "New York"
+            };
+
+            // Populate the JSON fields and values
+            var jsonFieldsDiv = $('#jsonFields');
+            Object.keys(jsonData).forEach(function (key) {
+                var fieldLabel = $('<label>', {
+                    for: key,
+                    class: 'block text-sm font-medium text-gray-600',
+                    text: key
+                });
+
+                var dropdown = $('<select>', {
+                    id: key,
+                    class: 'w-full p-2 border rounded-md',
+                    'data-key': key
+                });
+
+                var fieldValue = jsonData[key];
+
+                // Create options for the dropdown
+                var option = $('<option>', {
+                    value: fieldValue,
+                    text: fieldValue
+                });
+
+                // Append options to the dropdown
+                dropdown.append(option);
+
+                // Append the label and dropdown to the form in the same row
+                jsonFieldsDiv.append(fieldLabel);
+                jsonFieldsDiv.append(dropdown);
+            });
+
+            // Event handler for save button
+            $('#saveButton').on('click', function (e) {
+                e.preventDefault();
+
+                // Update JSON data based on dropdown values
+                jsonFieldsDiv.find('select').each(function () {
+                    var key = $(this).data('key');
+                    var newValue = $(this).val();
+                    jsonData[key] = newValue;
+                });
+
+                // Log the updated JSON data
+                console.log(jsonData);
+
+                // TODO: Make HTTP API request to save the updated JSON data
+                // Example: You can use $.ajax() or $.post() to send data to your API
+                // $.ajax({
+                //     url: 'your_api_endpoint',
+                //     type: 'POST',
+                //     data: JSON.stringify(jsonData),
+                //     contentType: 'application/json; charset=utf-8',
+                //     success: function (response) {
+                //         console.log('Data saved successfully');
+                //     },
+                //     error: function (error) {
+                //         console.error('Error saving data:', error);
+                //     }
+                // });
+            });
+        });
+    </script>
+
+</body>
+</html>
